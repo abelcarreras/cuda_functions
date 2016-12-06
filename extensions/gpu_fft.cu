@@ -1,16 +1,16 @@
-#include <Python.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <numpy/arrayobject.h>
 #include <string.h>
-#include <math.h>
 #include <complex.h>
 
-// includes, project
+//includes numpy
+#include <Python.h>
+#include <numpy/arrayobject.h>
+
+// includes CUDA
 #include <cufft.h>
 #include <cublas_v2.h>
-//#include <cuda_runtime.h>
 
 // Complex data type
 typedef float2 Complex;
@@ -25,15 +25,12 @@ typedef double2 DoubleComplex;
 
 static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   // Not used yet!
-    int     OtherData2 = 1;   // Not used yet!
-
 
     // Interface with Python
     PyObject *h_signal_obj;
 
-    static char *kwlist[] = {"input_data", "other_data", "other_data2", NULL};
-    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O|ii", kwlist, &h_signal_obj, &OtherData, &OtherData2))  return NULL;
+    static char *kwlist[] = {"input_data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O", kwlist, &h_signal_obj))  return NULL;
 
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CFLOAT, NPY_IN_ARRAY);
 
@@ -43,17 +40,17 @@ static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
     }
 
     Complex *h_signal = (Complex *)PyArray_DATA(h_signal_array);
-    int     SignalSize = (int)PyArray_DIM(h_signal_array, 0);
+    int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
 
-    //Create new numpy array for storing result
+    //Create new numpy array to store result
     PyArrayObject *return_object;
-    int dims[1]={SignalSize};
+    int dims[1]={signal_size};
     return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CFLOAT);
-    Complex *Return_data  = (Complex *)PyArray_DATA(return_object);
+    Complex *return_data  = (Complex *)PyArray_DATA(return_object);
 
 
-    int mem_size = sizeof(Complex) * SignalSize;
+    int mem_size = sizeof(Complex) * signal_size;
 
     // Allocate device memory for signal
     Complex* d_signal;
@@ -66,14 +63,14 @@ static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
 
     // CUFFT plan
     cufftHandle plan;
-    cufftPlan1d(&plan, SignalSize, CUFFT_C2C, 1);
+    cufftPlan1d(&plan, signal_size, CUFFT_C2C, 1);
 
     // Fourier transform using CUFFT_FORWARD
     cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_FORWARD);
 
 
     // Copy device memory to host
-    cudaMemcpy(Return_data, d_signal, mem_size,
+    cudaMemcpy(return_data, d_signal, mem_size,
                cudaMemcpyDeviceToHost);
 
     //Destroy CUFFT context
@@ -99,15 +96,11 @@ static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   // Not used yet!
-    int     OtherData2 = 1;   // Not used yet!
-
-
     //  Interface with Python
     PyObject *h_signal_obj;
 
-    static char *kwlist[] = {"input_data", "other_data", "other_data2", NULL};
-    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O|ii", kwlist, &h_signal_obj, &OtherData, &OtherData2))  return NULL;
+    static char *kwlist[] = {"input_data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O", kwlist, &h_signal_obj))  return NULL;
 
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CFLOAT, NPY_IN_ARRAY);
 
@@ -117,17 +110,17 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
     }
 
     Complex *h_signal = (Complex *)PyArray_DATA(h_signal_array);
-    int     SignalSize = (int)PyArray_DIM(h_signal_array, 0);
+    int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
 
     //Create new numpy array for storing result
     PyArrayObject *return_object;
-    int dims[1]={SignalSize};
+    int dims[1]={signal_size};
     return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CFLOAT);
-    Complex *Return_data  = (Complex *)PyArray_DATA(return_object);
+    Complex *return_data  = (Complex *)PyArray_DATA(return_object);
 
 
-    int mem_size = sizeof(Complex) * SignalSize;
+    int mem_size = sizeof(Complex) * signal_size;
 
     // Allocate device memory for signal
     Complex* d_signal;
@@ -139,7 +132,7 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 
     // CUFFT plan
     cufftHandle plan;
-    cufftPlan1d(&plan, SignalSize, CUFFT_C2C, 1);
+    cufftPlan1d(&plan, signal_size, CUFFT_C2C, 1);
 
     // Create a handle for CUBLAS
     cublasHandle_t handle;
@@ -149,13 +142,13 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
     // Inverse Fourier transform using CUFFT_INVERSE
     cufftExecC2C(plan, (cufftComplex *)d_signal, (cufftComplex *)d_signal, CUFFT_INVERSE);
 
-    float alpha = 1.0 / SignalSize;
-    cublasCsscal(handle, SignalSize,
+    float alpha = 1.0 / signal_size;
+    cublasCsscal(handle, signal_size,
                  &alpha,
                  d_signal, 1);
 
     // Copy device memory to host
-    cudaMemcpy(Return_data, d_signal, mem_size,
+    cudaMemcpy(return_data, d_signal, mem_size,
                cudaMemcpyDeviceToHost);
 
     // Finish cublas
@@ -202,17 +195,17 @@ static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
     }
 
     DoubleComplex *h_signal = (DoubleComplex *)PyArray_DATA(h_signal_array);
-    int     SignalSize = (int)PyArray_DIM(h_signal_array, 0);
+    int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
 
     //Create new numpy array for storing result
     PyArrayObject *return_object;
-    int dims[1]={SignalSize};
+    int dims[1]={signal_size};
     return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CDOUBLE);
-    DoubleComplex *Return_data  = (DoubleComplex *)PyArray_DATA(return_object);
+    DoubleComplex *return_data  = (DoubleComplex *)PyArray_DATA(return_object);
 
 
-    int mem_size = sizeof(DoubleComplex) * SignalSize;
+    int mem_size = sizeof(DoubleComplex) * signal_size;
 
     // Allocate device memory for signal
     DoubleComplex* d_signal;
@@ -225,14 +218,14 @@ static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
 
     // CUFFT plan
     cufftHandle plan;
-    cufftPlan1d(&plan, SignalSize, CUFFT_Z2Z, 1);
+    cufftPlan1d(&plan, signal_size, CUFFT_Z2Z, 1);
 
     // Fourier transform using CUFFT_FORWARD
     cufftExecZ2Z(plan, (cufftDoubleComplex *)d_signal, (cufftDoubleComplex *)d_signal, CUFFT_FORWARD);
 
 
     // Copy device memory to host
-    cudaMemcpy(Return_data, d_signal, mem_size,
+    cudaMemcpy(return_data, d_signal, mem_size,
                cudaMemcpyDeviceToHost);
 
     //Destroy CUFFT context
@@ -276,17 +269,17 @@ static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
     }
 
     DoubleComplex *h_signal = (DoubleComplex *)PyArray_DATA(h_signal_array);
-    int     SignalSize = (int)PyArray_DIM(h_signal_array, 0);
+    int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
 
     //Create new numpy array for storing result
     PyArrayObject *return_object;
-    int dims[1]={SignalSize};
+    int dims[1]={signal_size};
     return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CDOUBLE);
-    DoubleComplex *Return_data  = (DoubleComplex *)PyArray_DATA(return_object);
+    DoubleComplex *return_data  = (DoubleComplex *)PyArray_DATA(return_object);
 
 
-    int mem_size = sizeof(DoubleComplex) * SignalSize;
+    int mem_size = sizeof(DoubleComplex) * signal_size;
 
     // Allocate device memory for signal
     DoubleComplex* d_signal;
@@ -299,7 +292,7 @@ static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
 
     // CUFFT plan
     cufftHandle plan;
-    cufftPlan1d(&plan, SignalSize, CUFFT_Z2Z, 1);
+    cufftPlan1d(&plan, signal_size, CUFFT_Z2Z, 1);
 
     // Create a handle for CUBLAS
     cublasHandle_t handle;
@@ -309,13 +302,13 @@ static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
     // Inverse Fourier transform using CUFFT_INVERSE
     cufftExecZ2Z(plan, (cufftDoubleComplex *)d_signal, (cufftDoubleComplex *)d_signal, CUFFT_INVERSE);
 
-    double alpha = 1.0 / SignalSize;
-    cublasZdscal(handle, SignalSize,
+    double alpha = 1.0 / signal_size;
+    cublasZdscal(handle, signal_size,
                  &alpha,
                  d_signal, 1);
 
     // Copy device memory to host
-    cudaMemcpy(Return_data, d_signal, mem_size,
+    cudaMemcpy(return_data, d_signal, mem_size,
                cudaMemcpyDeviceToHost);
 
     // Finish cublas
