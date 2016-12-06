@@ -83,10 +83,8 @@ def customize_compiler_for_nvcc(self):
             # use only a subset of the extra_postargs, which are 1-1 translated
             # from the extra_compile_args in the Extension class
             postargs = extra_postargs['nvcc']
-  #          os.environ["CC"] = "nvcc"
         else:
             postargs = extra_postargs['gcc']
-   #         os.environ["CC"] = "gcc"
 
         super(obj, src, ext, cc_args, postargs, pp_opts)
         # reset the default compiler_so, which we might have changed for cuda
@@ -102,43 +100,37 @@ class custom_build_ext(build_ext):
         customize_compiler_for_nvcc(self.compiler)
         build_ext.build_extensions(self)
 
-
+# FFT function
 ext = Extension('extensions.gpu_fft',
                 sources=['extensions/gpu_fft.cu'],
                 include_dirs=[include_dirs_numpy, CUDA['include']],
                 library_dirs=[CUDA['lib64']],
                 libraries=['cudart', 'cufft', 'cublas'],
                 runtime_library_dirs=[CUDA['lib64']],
-                # this syntax is specific to this build system
-                # we're only going to use certain compiler args with nvcc and not with gcc
-                # the implementation of this trick is in customize_compiler() below
                 extra_compile_args={'gcc': [],
                                     'nvcc': ['-arch=sm_20', '--ptxas-options=-v', '-c' , '--compiler-options', "'-fPIC'"]},
                 )
 
-
+# Correlation fucntion
 ext2 = Extension('extensions.gpu_correlate',
                 sources=['extensions/gpu_correlate.cu'],
                 include_dirs=[include_dirs_numpy, CUDA['include']],
                 library_dirs=[CUDA['lib64']],
                 runtime_library_dirs=[CUDA['lib64']],
                 libraries=['cudart','cublas'],
-                 # this syntax is specific to this build system
-                # we're only going to use certain compiler args with nvcc and not with gcc
-                # the implementation of this trick is in customize_compiler() below
                 extra_compile_args={'gcc': [],
                                     'nvcc': ['-arch=sm_20', '--ptxas-options=-v', '-c' , '--compiler-options', "'-fPIC'"]},
                 )
 
-
+# Example c function (MEM)
 module_c = Extension('extensions.test_c',
                       extra_compile_args={'gcc': ['-std=c99', '-fopenmp'], 'nvcc': []},
                       extra_link_args=['-lgomp'],
                       include_dirs=[include_dirs_numpy],
                       sources=['extensions/test_c.c'])
 
-setup(name='test2',
-      version='0.1',
+setup(name='gpu_functions',
+      version='0.9',
       py_modules=['extensions.test_fft'],
       ext_modules=[ext, ext2, module_c],
       # inject our custom trigger
