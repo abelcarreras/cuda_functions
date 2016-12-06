@@ -34,28 +34,28 @@ Interface
 ---------------------------------------------------------
 
 - **gpu_fft.dfft**(a)
-<br>Parameters    a: array_like (complex64)
+<br>Parameters    a: 1-D array_like (complex64)
 <br>Returns       out: array_like (complex64)
 
 - **gpu_fft.dfft**(a)
-<br>Parameters    a: array_like (complex128)
+<br>Parameters    a: 1-D array_like (complex128)
 <br>Returns       out: array_like (complex128)
 
 - **gpu_fft.ifft**(a)
-<br>Parameters    a: array_like (complex64)
+<br>Parameters    a: 1-D array_like (complex64)
 <br>Returns:      out: array_like (complex64)
 
 - **gpu_fft.difft**(a)
-<br>Parameters    a: array_like (complex128)
+<br>Parameters    a: 1-D array_like (complex128)
 <br>Returns       out: array_like (complex128)
 
 - **gpu_correlate.acorrelate**(a, mode='valid')
-<br>Parameters    a: array_like (complex64)
+<br>Parameters    a: 1-D array_like (complex64)
               <br>mode: {'valid', 'same', 'full'}, same behavior than numpy
 <br>Returns       out: array_like (complex64)
 
 - **gpu_correlate.dacorrelate**(a, mode='valid')
-<br>Parameters    a: array_like (complex128)
+<br>Parameters    a: 1-D array_like (complex128)
               <br>mode: {'valid', 'same', 'full'}, same behavior than numpy
 <br>Returns       out: array_like (complex128)
 
