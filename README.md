@@ -1,9 +1,10 @@
 CUDA functions
-=========
-This is a collection of python functions that uses CUDA, cuFFT and cuBLAS
-using the Python C API to interface with Python.
+==============
+This is a collection of python functions written with CUDA,
+using cuFFT and cuBLAS libraries.
+The interface with Python is written using the Python C API.
 
-These function intend to mimic the behavior of numpy functions: fft and correlate
+These functions intend to mimic the behavior of numpy functions: fft and correlate
 using the power of GPU.
 
 Included functions
