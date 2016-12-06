@@ -33,11 +33,11 @@ Installation
 Interface
 ---------------------------------------------------------
 
-gpu_fft.dfft(a)
+- gpu_fft.dfft(a)
 <br>Parameters    a: array_like (complex64)
 <br>Returns:      out: array_like (complex64)
 
-gpu_fft.dfft(a)
+- gpu_fft.dfft(a)
 <br>Parameters    a: array_like (complex128)
 <br>Returns:      out: array_like (complex128)
 
