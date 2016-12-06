@@ -21,14 +21,50 @@ Included functions
   - dacorrelate (double precision autocorrelation)
 
 
-How to use
+Installation
 ---------------------------------------------------------
 
 1. Run setup.py script to compile
    python setup.py install build_ext  --inplace
 
-
 2. Run and check included python scripts as example
+
+
+Interface
+---------------------------------------------------------
+
+gpu_fft.dfft(a)
+  Parameters    a: array_like (complex64)
+
+  Returns:      out: array_like (complex64)
+
+gpu_fft.dfft(a)
+  Parameters    a: array_like (complex128)
+
+  Returns:      out: array_like (complex128)
+
+gpu_fft.ifft(a)
+  Parameters    a: array_like (complex64)
+
+  Returns:      out: array_like (complex64)
+
+gpu_fft.difft(a)
+  Parameters    a: array_like (complex128)
+
+  Returns:      out: array_like (complex128)
+
+gpu_correlate.acorrelate(a, mode='valid')
+  Parameters    a: array_like (complex64)
+                mode: {'valid', 'same', 'full'}, optional
+
+  Returns:      out: array_like (complex64)
+
+gpu_correlate.dacorrelate(a, mode='valid')
+  Parameters    a: array_like (complex128)
+                mode: {'valid', 'same', 'full'}, optional
+
+  Returns:      out: array_like (complex128)
+
 
 
 Contact info

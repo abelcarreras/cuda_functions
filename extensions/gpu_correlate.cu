@@ -24,7 +24,7 @@ typedef double2 DoubleComplex;
 
 static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    const char *Mode = "single";   // Default value of Mode (to mimic numpy behavior)
+    const char *Mode = "valid";   // Default value of Mode (to mimic numpy behavior)
 
     //  Interface with Python
     PyObject *h_signal_obj;
@@ -94,7 +94,7 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
             if ((SignalSize/2+i) < SignalSize) Return_data[SignalSize/2+i] = h_output;
         }
     }
-    else if  (strcmp(Mode, "single") == 0) {
+    else if  (strcmp(Mode, "valid") == 0) {
 
         // Prepare output numpy array
         int dims[1]={1};
@@ -135,7 +135,7 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
 
 static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    const char    *Mode = "single";   // Default value of Mode (to mimic numpy behavior)
+    const char    *Mode = "valid";   // Default value of Mode (to mimic numpy behavior)
 
     //  Interface with Python
     PyObject *h_signal_obj;
@@ -209,7 +209,7 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
         }
 
     }
-    else if  (strcmp(Mode, "single") == 0) {
+    else if  (strcmp(Mode, "valid") == 0) {
 
         // Prepare output numpy array
         int dims[1]={1};

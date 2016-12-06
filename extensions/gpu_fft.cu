@@ -25,8 +25,8 @@ typedef double2 DoubleComplex;
 
 static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   //Default value for number of coeficients
-    int     OtherData2 = 1;   //Default value for number of coeficients
+    int     OtherData = 1;   // Not used yet!
+    int     OtherData2 = 1;   // Not used yet!
 
 
     // Interface with Python
@@ -99,8 +99,8 @@ static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   //Default value for number of coeficients
-    int     OtherData2 = 1;   //Default value for number of coeficients
+    int     OtherData = 1;   // Not used yet!
+    int     OtherData2 = 1;   // Not used yet!
 
 
     //  Interface with Python
@@ -184,8 +184,8 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   //Default value for number of coeficients
-    int     OtherData2 = 1;   //Default value for number of coeficients
+    int     OtherData = 1;   // Not used yet!
+    int     OtherData2 = 1;   // Not used yet!
 
 
     //  Interface with Python
@@ -258,8 +258,8 @@ static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   //Default value for number of coeficients
-    int     OtherData2 = 1;   //Default value for number of coeficients
+    int     OtherData = 1;   // Not used yet!
+    int     OtherData2 = 1;   // Not used yet!
 
 
     // Interface with Python
