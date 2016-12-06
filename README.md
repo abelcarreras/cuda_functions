@@ -60,7 +60,6 @@ Interface
 <br>Returns       out: array_like (complex128)
 
 
-
 Contact info
 ---------------------------------------------------------
 Abel Carreras
