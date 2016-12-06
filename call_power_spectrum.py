@@ -1,6 +1,6 @@
 
-import extensions.gpu_correlate as gpu_correlation
-import extensions.gpu_fft as gpu_fft
+import functions.gpu_correlate as gpu_correlation
+import functions.gpu_fft as gpu_fft
 import numpy as np
 import matplotlib.pyplot as pl
 

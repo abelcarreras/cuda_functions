@@ -1,4 +1,4 @@
-import extensions.gpu_correlate as gpu_correlate
+import functions.gpu_correlate as gpu_correlate
 import numpy as np
 import matplotlib.pyplot as pl
 

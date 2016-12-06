@@ -101,8 +101,8 @@ class custom_build_ext(build_ext):
         build_ext.build_extensions(self)
 
 # FFT function
-fft_module = Extension('extensions.gpu_fft',
-                       sources=['extensions/gpu_fft.cu'],
+fft_module = Extension('functions.gpu_fft',
+                       sources=['functions/gpu_fft.cu'],
                        include_dirs=[include_dirs_numpy, CUDA['include']],
                        library_dirs=[CUDA['lib64']],
                        libraries=['cudart', 'cufft', 'cublas'],
@@ -112,8 +112,8 @@ fft_module = Extension('extensions.gpu_fft',
                        )
 
 # Correlation fucntion
-acorr_module = Extension('extensions.gpu_correlate',
-                         sources=['extensions/gpu_correlate.cu'],
+acorr_module = Extension('functions.gpu_correlate',
+                         sources=['functions/gpu_correlate.cu'],
                          include_dirs=[include_dirs_numpy, CUDA['include']],
                          library_dirs=[CUDA['lib64']],
                          runtime_library_dirs=[CUDA['lib64']],
@@ -123,11 +123,11 @@ acorr_module = Extension('extensions.gpu_correlate',
                          )
 
 # Example c function (MEM)
-pure_c_module = Extension('extensions.test_c',
+pure_c_module = Extension('functions.test_c',
                           extra_compile_args={'gcc': ['-std=c99', '-fopenmp'], 'nvcc': []},
                           extra_link_args=['-lgomp'],
                           include_dirs=[include_dirs_numpy],
-                          sources=['extensions/test_c.c'])
+                          sources=['functions/test_c.c'])
 
 setup(name='gpu_functions',
       version='0.9',
