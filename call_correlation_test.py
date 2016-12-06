@@ -13,7 +13,7 @@ if True:
 
     pl.plot(data, label='original data')
 
-    cuda_res = gpu_correlate.dacorrelate(data, mode="same")  / data.size
+    cuda_res = gpu_correlate.dacorrelate(data, mode="same") / data.size
     # print res2
 
     numpy_res = np.correlate(data, data, mode='same') / data.size

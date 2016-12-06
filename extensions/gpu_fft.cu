@@ -177,15 +177,12 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   // Not used yet!
-    int     OtherData2 = 1;   // Not used yet!
-
 
     //  Interface with Python
     PyObject *h_signal_obj;
 
-    static char *kwlist[] = {"input_data", "other_data", "other_data2", NULL};
-    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O|ii", kwlist, &h_signal_obj, &OtherData, &OtherData2))  return NULL;
+    static char *kwlist[] = {"input_data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O", kwlist, &h_signal_obj))  return NULL;
 
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CDOUBLE, NPY_IN_ARRAY);
 
@@ -251,15 +248,12 @@ static PyObject* dfft(PyObject* self, PyObject *arg, PyObject *keywords)
 
 static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
 {
-    int     OtherData = 1;   // Not used yet!
-    int     OtherData2 = 1;   // Not used yet!
-
 
     // Interface with Python
     PyObject *h_signal_obj;
 
-    static char *kwlist[] = {"input_data", "other_data", "other_data2", NULL};
-    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O|ii", kwlist, &h_signal_obj, &OtherData, &OtherData2))  return NULL;
+    static char *kwlist[] = {"input_data", NULL};
+    if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O", kwlist, &h_signal_obj))  return NULL;
 
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CDOUBLE, NPY_IN_ARRAY);
 
@@ -325,7 +319,6 @@ static PyObject* difft(PyObject* self, PyObject *arg, PyObject *keywords)
 
     //Returning Python array
     return(PyArray_Return(return_object));
-
 }
 
 
