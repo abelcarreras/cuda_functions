@@ -29,7 +29,7 @@ Installation
 
 2. Run and check included python scripts as example
 
-3. If you want to install the module on your system use
+3. Alternatively, if you want to install the module on your system use
    distutils setup.py as usual:
    <br>python setup.py install --user
 
