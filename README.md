@@ -25,7 +25,7 @@ Installation
 ---------------------------------------------------------
 
 1. Run setup.py script to compile
-   <br>python setup.py install build_ext  --inplace
+   <br>python setup.py build_ext  --inplace
 
 2. Run and check included python scripts as example
 
