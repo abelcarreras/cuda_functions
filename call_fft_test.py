@@ -33,10 +33,10 @@ if True:
     pl.show()
 
 # Test speed
-if False:
+if True:
     # Initialize GPU for a fair start
     signal = np.random.rand(100) + np.random.rand(100)*1j
-    cProfile.run('test.dfft(signal)')
+    cProfile.run('gpu_fft.dfft(signal)')
 
     time_n = []
     time_c = []
@@ -49,7 +49,7 @@ if False:
         signal = np.array(signal, dtype=np.complex64)
 
         cProfile.run('np.fft.fft(signal)', 'restats_n')
-        cProfile.run('test.fft(signal)', 'restats_c')
+        cProfile.run('gpu_fft.fft(signal)', 'restats_c')
 
 
         p_n = pstats.Stats('restats_n')
