@@ -131,7 +131,6 @@ pure_c_module = Extension('extensions.test_c',
 
 setup(name='gpu_functions',
       version='0.9',
-      py_modules=['extensions.test_fft'],
       ext_modules=[fft_module, acorr_module, pure_c_module],
       # inject our custom trigger
       cmdclass={'build_ext': custom_build_ext}
