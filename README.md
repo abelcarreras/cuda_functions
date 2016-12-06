@@ -24,10 +24,14 @@ Included functions
 Installation
 ---------------------------------------------------------
 
-1. Run setup.py script to compile
+1. Run setup.py script to compile only (testing)
    <br>python setup.py build_ext  --inplace
 
 2. Run and check included python scripts as example
+
+3. If you want to install the module on your system use
+   distutils setup.py as usual:
+   <br>python setup.py install --user
 
 
 Interface
