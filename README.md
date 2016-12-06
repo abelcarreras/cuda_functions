@@ -33,7 +33,7 @@ Installation
 Interface
 ---------------------------------------------------------
 
-- gpu_fft.dfft(a)
+- **gpu_fft.dfft(a)**
 <br>Parameters    a: array_like (complex64)
 <br>Returns:      out: array_like (complex64)
 
@@ -51,12 +51,12 @@ Interface
 
 - gpu_correlate.acorrelate(a, mode='valid')
 <br>Parameters    a: array_like (complex64)
-<br>              mode: {'valid', 'same', 'full'}, optional
+               <br>mode: {'valid', 'same', 'full'}, optional
 <br>Returns:      out: array_like (complex64)
 
 - gpu_correlate.dacorrelate(a, mode='valid')
 <br>Parameters    a: array_like (complex128)
-                <br>mode: {'valid', 'same', 'full'}, optional
+              <br>mode: {'valid', 'same', 'full'}, optional
 <br>Returns:      out: array_like (complex128)
 
 
