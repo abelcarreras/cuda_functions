@@ -4,16 +4,18 @@
 #include <string.h>
 #include <complex.h>
 
-//includes numpy
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
-// includes CUDA
 #include <cublas_v2.h>
 
 // Complex data type
 typedef float2 Complex;
 typedef double2 DoubleComplex;
+
+
+static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *keywords);
+static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *keywords);
 
 
 ///////////////////////////////////////////////////////////
@@ -42,7 +44,6 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
     Complex *h_signal = (Complex *)PyArray_DATA(h_signal_array);
     int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
-    // Output intermediate variable
     Complex h_output;
 
     // Allocate device memory for signal
@@ -61,14 +62,11 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
 
     if  (strcmp(mode, "full") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={signal_size*2-1};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CFLOAT);
         Complex *return_data  = (Complex *)PyArray_DATA(return_object);
 
-        // Dot product using cuBlas
         for (int i=0; i< signal_size; i++){
-            // Dot product using cuBlas
             cublasCdotc(handle, signal_size-i,
                          &d_signal[i], 1,
                          d_signal, 1,
@@ -79,13 +77,11 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
     }
     else if  (strcmp(mode, "same") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={signal_size};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CFLOAT);
         Complex *return_data  = (Complex *)PyArray_DATA(return_object);
 
         for (int i=0; i< signal_size/2+1; i++){
-            // Dot product using cuBlas
             cublasCdotc(handle, signal_size-i,
                          &d_signal[i], 1,
                          d_signal, 1,
@@ -96,12 +92,10 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
     }
     else if  (strcmp(mode, "valid") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={1};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CFLOAT);
         Complex *return_data  = (Complex *)PyArray_DATA(return_object);
 
-        // Dot product using cuBlas
         cublasCdotc(handle, signal_size,
                      d_signal, 1,
                      d_signal, 1,
@@ -113,16 +107,11 @@ static PyObject* autocorrelation_sp(PyObject* self, PyObject *arg, PyObject *key
         PyErr_Print();
     }
 
-    // cleanup memory device
+    // cleanup memory
     cudaFree(d_signal);
-
-    // Finish cublas
     cublasDestroy(handle);
-
-    // Clean up memory python
     Py_DECREF(h_signal_array);
 
-    //Returning Python array
     return(PyArray_Return(return_object));
 }
 
@@ -153,7 +142,6 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
     DoubleComplex *h_signal = (DoubleComplex *)PyArray_DATA(h_signal_array);
     int     signal_size = (int)PyArray_DIM(h_signal_array, 0);
 
-    // Output intermediate variable
     DoubleComplex h_output;
 
     // Allocate device memory for signal
@@ -172,14 +160,11 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
 
     if  (strcmp(mode, "full") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={signal_size*2-1};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CDOUBLE);
         DoubleComplex *return_data  = (DoubleComplex *)PyArray_DATA(return_object);
 
-        // Dot product using cuBlas
         for (int i=0; i< signal_size; i++){
-            // Dot product using cuBlas
             cublasZdotc(handle, signal_size-i,
                          &d_signal[i], 1,
                          d_signal, 1,
@@ -190,19 +175,15 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
     }
     else if  (strcmp(mode, "same") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={signal_size};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CDOUBLE);
         DoubleComplex *return_data  = (DoubleComplex *)PyArray_DATA(return_object);
 
         for (int i=0; i< signal_size/2+1; i++){
-
-            // Dot product using cuBlas
             cublasZdotc(handle, signal_size-i,
                          &d_signal[i], 1,
                          d_signal, 1,
                          &h_output);
-             //   printf("%d: %lf\n ", signal_size/2+i, h_output);
 
             if ((signal_size/2+i) < signal_size) return_data[signal_size/2+i] = h_output;
             return_data[signal_size/2-i] = h_output;
@@ -211,12 +192,10 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
     }
     else if  (strcmp(mode, "valid") == 0) {
 
-        // Prepare output numpy array
         int dims[1]={1};
         return_object = (PyArrayObject *) PyArray_FromDims(1,dims,NPY_CDOUBLE);
         DoubleComplex *return_data  = (DoubleComplex *)PyArray_DATA(return_object);
 
-        // Dot product using cuBlas
         cublasZdotc(handle, signal_size,
                      d_signal, 1,
                      d_signal, 1,
@@ -230,16 +209,10 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
 
     // Finish cublas
     cublasDestroy(handle);
-
-    // cleanup memory device
     cudaFree(d_signal);
-
-    // Clean up memory python
     Py_DECREF(h_signal_array);
 
-    //Returning Python array
     return(PyArray_Return(return_object));
-//    return(h_signal_array);
 }
 
 

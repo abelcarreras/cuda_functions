@@ -1,4 +1,4 @@
-import functions.gpu_fft as gpu_fft
+from cuda_functions import cuda_fft, cuda_ifft
 import numpy as np
 import matplotlib.pyplot as pl
 
@@ -18,8 +18,8 @@ if True:
     print('finish numpy')
 
     print('cuda')
-    b = gpu_fft.dfft(signal)
-    b = gpu_fft.difft(b)
+    b = cuda_fft(signal)
+    b = cuda_ifft(b)
     print('finish cuda')
 
     # print(a)
@@ -36,7 +36,7 @@ if True:
 if True:
     # Initialize GPU for a fair start
     signal = np.random.rand(100) + np.random.rand(100)*1j
-    cProfile.run('gpu_fft.dfft(signal)')
+    cProfile.run('cuda_fft(signal)')
 
     time_n = []
     time_c = []
@@ -49,7 +49,7 @@ if True:
         signal = np.array(signal, dtype=np.complex64)
 
         cProfile.run('np.fft.fft(signal)', 'restats_n')
-        cProfile.run('gpu_fft.fft(signal)', 'restats_c')
+        cProfile.run('cuda_fft(signal)', 'restats_c')
 
 
         p_n = pstats.Stats('restats_n')

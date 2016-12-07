@@ -1,4 +1,5 @@
-import functions.gpu_correlate as gpu_correlate
+from cuda_functions import cuda_acorrelate
+
 import numpy as np
 import matplotlib.pyplot as pl
 
@@ -13,7 +14,7 @@ if True:
 
     pl.plot(data, label='original data')
 
-    cuda_res = gpu_correlate.dacorrelate(data, mode="same") / data.size
+    cuda_res = cuda_acorrelate(data, mode="same") / data.size
     # print res2
 
     numpy_res = np.correlate(data, data, mode='same') / data.size
@@ -32,7 +33,7 @@ if True:
 if True:
     # Initialize GPU for a fair start
     signal = np.random.rand(100) + np.random.rand(100)*1j
-    cProfile.run('gpu_correlate.dacorrelate(signal, mode="same")')
+    cProfile.run('cuda_acorrelate(signal, mode="same")')
 
     time_n = []
     time_c = []
@@ -46,9 +47,9 @@ if True:
 
         signal = np.array(signal, dtype='complex64')
 
-        cProfile.run('gpu_correlate.acorrelate(signal, mode="full")', 'restats_cs')
+        cProfile.run('cuda_acorrelate(signal, mode="full")', 'restats_cs')
         cProfile.run('np.correlate(signal, signal, mode="full")', 'restats_n')
-        cProfile.run('gpu_correlate.dacorrelate(signal, mode="full")', 'restats_c')
+        cProfile.run('cuda_acorrelate(signal, mode="full")', 'restats_c')
 
 
         p_n = pstats.Stats('restats_n')

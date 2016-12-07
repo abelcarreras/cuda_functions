@@ -1,16 +1,15 @@
-
-import functions.gpu_correlate as gpu_correlation
-import functions.gpu_fft as gpu_fft
+from cuda_functions import cuda_acorrelate
+from cuda_functions import cuda_fft
 import numpy as np
 import matplotlib.pyplot as pl
 
 
-data = np.sin(np.arange(0, 8000, 0.1)) + np.random.rand(80000)*0.1 # + np.cos(np.arange(0, 800, 0.1))*1.0j
-
+data = np.sin(np.arange(0, 8000, 0.1)) + np.random.rand(80000)*0.1
+data = np.array(data, dtype=complex)
 #pl.plot(data, label='original')
 
-cuda_res = (gpu_correlation.dacorrelate(data, mode="same")) / data.size
-cuda_res = gpu_fft.dfft(cuda_res)
+cuda_res = (cuda_acorrelate(data, mode="same")) / data.size
+cuda_res = cuda_fft(cuda_res)
 
 numpy_res = np.correlate(data, data, mode='same') / data.size
 numpy_res = np.fft.fft(numpy_res)
@@ -36,4 +35,3 @@ pl.plot(frequency_range, numpy_res, label='numpy')
 
 pl.legend()
 pl.show()
-
