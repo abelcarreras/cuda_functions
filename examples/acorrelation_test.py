@@ -2,12 +2,8 @@ from cuda_functions import cuda_acorrelate
 
 import numpy as np
 import matplotlib.pyplot as pl
-
 import cProfile, pstats
 
-from src.gpu_correlate import acorrelate
-help(acorrelate)
-exit()
 
 # Check function
 if True:
