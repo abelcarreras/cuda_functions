@@ -3,8 +3,9 @@ from src import gpu_fft
 
 import numpy as np
 
-def cuda_acorrelate(array, mode='valid', direct_interface=False):
-    if not(direct_interface):
+
+def cuda_acorrelate(array, mode='valid', safe_mode=True):
+    if safe_mode:
         array = np.ascontiguousarray(array)
 
     if array.dtype == 'complex64':
@@ -15,8 +16,8 @@ def cuda_acorrelate(array, mode='valid', direct_interface=False):
         raise TypeError('{} type not supported (complex only)'.format(array.dtype))
 
 
-def cuda_fft(array, direct_interface=False):
-    if not(direct_interface):
+def cuda_fft(array, safe_mode=True):
+    if safe_mode:
         array = np.ascontiguousarray(array)
 
     if array.dtype == 'complex64':
@@ -27,8 +28,8 @@ def cuda_fft(array, direct_interface=False):
         raise TypeError('{} type not supported (complex only)'.format(array.dtype))
 
 
-def cuda_ifft(array, direct_interface=False):
-    if not(direct_interface):
+def cuda_ifft(array, safe_mode=True):
+    if safe_mode:
         array = np.ascontiguousarray(array)
 
     if array.dtype == 'complex64':

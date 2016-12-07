@@ -7,18 +7,16 @@ The interface with Python is written using the Python C API.
 These functions intend to mimic the behavior of numpy functions: fft and correlate
 using the power of GPU.
 
-Included functions
+
+Included functions (c)
 ---------------------------------------------------------
 
 1. Fast Fourier transform
-  - fft   (single precision Fourier transfom)
-  - dfft  (double precision Fourier transfom)
-  - ifft  (single precision inverse Fourier transfom)
-  - difft (double precision inverse Fourier transfom)
+  - cuda_fft   (single/double precision Fourier transfom)
+  - cuda_ifft  (single/double precision inverse Fourier transfom)
 
 2. Autocorrelation functions
-  - acorrelate (single precision autocorrelation)
-  - dacorrelate (double precision autocorrelation)
+  - cuda_acorrelate (single/double precision autocorrelation function)
 
 
 Installation
@@ -33,8 +31,10 @@ Installation
    distutils setup.py as usual:
    <br>python setup.py install --user
 
+
 Contact info
 ---------------------------------------------------------
+
 Abel Carreras
 <br>abelcarreras83@gmail.com
 

@@ -218,10 +218,10 @@ static PyObject* autocorrelation_dp(PyObject* self, PyObject *arg, PyObject *key
 
 
 static char extension_docs_sp[] =
-    "autocorrelation(signal)\nAutocorrelation implemented in CUDA\n(Single precision)\n  ";
+    "autocorrelation(signal)\nAutocorrelation function implemented in CUDA\n(Single precision)\n  ";
 
 static char extension_docs_dp[] =
-    "autocorrelation(signal)\nAutocorrelation implemented in CUDA\n(Double precision)\n  ";
+    "autocorrelation(signal)\nAutocorrelation function implemented in CUDA\n(Double precision)\n  ";
 
 
 static PyMethodDef extension_funcs[] =

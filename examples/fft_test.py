@@ -12,15 +12,11 @@ if True:
     pl.plot(signal.imag)
     pl.show()
 
-    print('numpy')
     a = np.fft.fft(signal)
     a = np.fft.ifft(a)
-    print('finish numpy')
 
-    print('cuda')
     b = cuda_fft(signal)
     b = cuda_ifft(b)
-    print('finish cuda')
 
     # print(a)
     pl.plot(a.real, label='numpy real')
@@ -39,32 +35,46 @@ if True:
     cProfile.run('cuda_fft(signal)')
 
     time_n = []
+    time_ns = []
     time_c = []
+    time_cs = []
     tlen = []
-    for l in range(100000, 10000000, 100000):
+    for l in range(100000, 10000000, 1000000):
         #signal = np.sin(np.arange(3000000)*0.1) + np.cos(np.arange(3000000)*0.1)*1j
         signal = np.random.rand(l) + np.random.rand(l)*1j
 
 
-        signal = np.array(signal, dtype=np.complex64)
+        signal_64 = np.array(signal, dtype=np.complex64)
 
+        cProfile.run('np.fft.fft(signal_64)', 'restats_ns')
         cProfile.run('np.fft.fft(signal)', 'restats_n')
-        cProfile.run('cuda_fft(signal)', 'restats_c')
+        cProfile.run('cuda_fft(signal, safe_mode=False)', 'restats_c')
+        cProfile.run('cuda_fft(signal_64, safe_mode=False)', 'restats_cs')
 
 
         p_n = pstats.Stats('restats_n')
+        p_ns = pstats.Stats('restats_ns')
         p_c = pstats.Stats('restats_c')
+        p_cs = pstats.Stats('restats_cs')
 
-        print '{} {} {}'.format(l,
-                                p_n.total_tt/ p_n.total_calls,
-                                p_c.total_tt/ p_c.total_calls)
+        print '{:8d} {:.6f} {:.6f} {:.6f} {:.6f}'.format(l,
+                                p_n.total_tt / p_n.total_calls,
+                                p_ns.total_tt/ p_ns.total_calls,
+                                p_c.total_tt/ p_c.total_calls,
+                                p_cs.total_tt / p_cs.total_calls)
 
         time_n.append(p_n.total_tt/p_n.total_calls)
+        time_ns.append(p_ns.total_tt/p_ns.total_calls)
         time_c.append(p_c.total_tt/p_c.total_calls)
+        time_cs.append(p_cs.total_tt/p_cs.total_calls)
         tlen.append(l)
 
-    pl.plot(tlen, time_n, label='numpy', marker='o')
-    pl.plot(tlen, time_c, label='cuda', marker='o', color='r')
+    pl.plot(tlen, time_n, label='numpy double', marker='o')
+    pl.plot(tlen, time_ns, label='numpy single', marker='o', color='y')
+    pl.plot(tlen, time_c, label='cuda double', marker='o', color='r')
+    pl.plot(tlen, time_cs, label='cuda single', marker='o', color='g')
+    pl.xlabel('number of samples')
+    pl.ylabel('time [s]')
     pl.legend()
 
     pl.show()
