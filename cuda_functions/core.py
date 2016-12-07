@@ -1,5 +1,5 @@
-from cuda_functions.src import gpu_correlate
-from cuda_functions.src import gpu_fft
+from bin import gpu_correlate
+from bin import gpu_fft
 
 import numpy as np
 

@@ -101,7 +101,7 @@ class custom_build_ext(build_ext):
         build_ext.build_extensions(self)
 
 # FFT function
-fft_module = Extension('src.gpu_fft',
+fft_module = Extension('cuda_functions.bin.gpu_fft',
                        sources=['src/gpu_fft.cu'],
                        include_dirs=[include_dirs_numpy, CUDA['include']],
                        library_dirs=[CUDA['lib64']],
@@ -112,7 +112,7 @@ fft_module = Extension('src.gpu_fft',
                        )
 
 # Correlation fucntion
-acorr_module = Extension('src.gpu_correlate',
+acorr_module = Extension('cuda_functions.bin.gpu_correlate',
                          sources=['src/gpu_correlate.cu'],
                          include_dirs=[include_dirs_numpy, CUDA['include']],
                          library_dirs=[CUDA['lib64']],
