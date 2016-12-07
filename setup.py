@@ -126,6 +126,7 @@ acorr_module = Extension('src.gpu_correlate',
 setup(name='cuda_functions',
       version='0.9',
       ext_modules=[fft_module, acorr_module],
+      packages=['cuda_functions'],
       # inject our custom trigger
       cmdclass={'build_ext': custom_build_ext}
       )
