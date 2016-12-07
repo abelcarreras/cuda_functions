@@ -123,7 +123,7 @@ acorr_module = Extension('src.gpu_correlate',
                          )
 
 
-setup(name='gpu_functions',
+setup(name='cuda_functions',
       version='0.9',
       ext_modules=[fft_module, acorr_module],
       # inject our custom trigger
