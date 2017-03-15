@@ -2,7 +2,15 @@
 # Copyright (c) 2014, Robert T. McGibbon and the Authors
 # All rights reserved.
 
-from distutils.core import setup, Extension
+try:
+    from setuptools import setup, Extension
+    use_setuptools = True
+    print("setuptools is used.")
+except ImportError:
+    from distutils.core import setup, Extension
+    use_setuptools = False
+    print("distutils is used.")
+
 
 import os
 from os.path import join as pjoin
