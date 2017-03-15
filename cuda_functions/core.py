@@ -2,7 +2,7 @@ from cuda_functions.bin import gpu_correlate
 from cuda_functions.bin import gpu_fft
 
 import numpy as np
-
+import warnings
 
 def cuda_acorrelate(array, mode='valid', safe_mode=True):
     if safe_mode:
@@ -13,7 +13,8 @@ def cuda_acorrelate(array, mode='valid', safe_mode=True):
     elif array.dtype == 'complex128':
         return gpu_correlate.dacorrelate(array, mode=mode)
     else:
-        raise TypeError('{} type not supported (complex only)'.format(array.dtype))
+        warnings.warn('{} type not supported, it will be converted to complex128'.format(array.dtype))
+        return gpu_correlate.dacorrelate(np.array(array, dtype='complex128'), mode=mode)
 
 
 def cuda_fft(array, safe_mode=True):
@@ -25,7 +26,8 @@ def cuda_fft(array, safe_mode=True):
     elif array.dtype == 'complex128':
         return gpu_fft.dfft(array)
     else:
-        raise TypeError('{} type not supported (complex only)'.format(array.dtype))
+        warnings.warn('{} type not supported, it will be converted to complex128'.format(array.dtype))
+        return gpu_fft.dfft(np.array(array, dtype='complex128'))
 
 
 def cuda_ifft(array, safe_mode=True):
@@ -37,4 +39,5 @@ def cuda_ifft(array, safe_mode=True):
     elif array.dtype == 'complex128':
         return gpu_fft.difft(array)
     else:
-        raise TypeError('{} type not supported (complex only)'.format(array.dtype))
+        warnings.warn('{} type not supported, it will be converted to complex128'.format(array.dtype))
+        return gpu_fft.difft(np.array(array, dtype='complex128'))
