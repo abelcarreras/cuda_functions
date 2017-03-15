@@ -1,3 +1,5 @@
+[![PyPI version](https://badge.fury.io/py/cuda_functions.svg)](https://pypi.python.org/pypi/cuda_functions)
+
 CUDA functions
 ==============
 This is a collection of python functions written with CUDA,
