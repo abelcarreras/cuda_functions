@@ -138,10 +138,16 @@ acorr_module = Extension('cuda_functions.bin.gpu_correlate',
 
 
 setup(name='cuda_functions',
+      author='Abel Carreras',
+      description='cuda_functions module',
+      url='https://github.com/abelcarreras/cuda_functions',
+      author_email='abelcarreras83@gmail.com',
       version=get_version_number(),
       ext_modules=[fft_module, acorr_module],
       packages=['cuda_functions',
                 'cuda_functions.bin'],
+      license='MIT License',
+      requires=['numpy'],
       # inject our custom trigger
       cmdclass={'build_ext': custom_build_ext}
       )
