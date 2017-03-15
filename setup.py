@@ -17,6 +17,12 @@ from os.path import join as pjoin
 from distutils.command.build_ext import build_ext
 import numpy
 
+def get_version_number():
+    __version__ = None
+    for l in open('cuda_functions/__init__.py', 'r').readlines():
+        if not(l.find('__version__')):
+            exec(l)
+            return __version__
 
 def find_in_path(name, path):
     "Find a file in a search path"
@@ -132,7 +138,7 @@ acorr_module = Extension('cuda_functions.bin.gpu_correlate',
 
 
 setup(name='cuda_functions',
-      version='0.9',
+      version=get_version_number(),
       ext_modules=[fft_module, acorr_module],
       packages=['cuda_functions',
                 'cuda_functions.bin'],
