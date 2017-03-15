@@ -5,8 +5,10 @@ import matplotlib.pyplot as pl
 
 
 data = np.sin(np.arange(0, 8000, 0.1)) + np.random.rand(80000)*0.1
-data = np.array(data, dtype=complex)
 #pl.plot(data, label='original')
+
+# Double precision
+data = np.array(data, dtype=complex)
 
 cuda_res = (cuda_acorrelate(data, mode="same")) / data.size
 cuda_res = cuda_fft(cuda_res)
@@ -27,11 +29,8 @@ numpy_res = np.abs(numpy_res)
 numpy_res =np.interp(frequency_range, freqs[idx], numpy_res[idx].real)
 
 
-
 pl.plot(frequency_range, cuda_res, '.', label='cuda', marker='o')
-#pl.plot(frequency_range, res2.imag, '.', label='cuda imag', marker='o')
 pl.plot(frequency_range, numpy_res, label='numpy')
-#pl.plot(frequency_range, res3.imag, label='numpy imag')
 
 pl.legend()
 pl.show()

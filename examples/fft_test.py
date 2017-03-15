@@ -40,10 +40,11 @@ if True:
     time_cs = []
     tlen = []
     for l in range(100000, 10000000, 1000000):
-        #signal = np.sin(np.arange(3000000)*0.1) + np.cos(np.arange(3000000)*0.1)*1j
+
+        # Double precision
         signal = np.random.rand(l) + np.random.rand(l)*1j
 
-
+        #Single precision
         signal_64 = np.array(signal, dtype=np.complex64)
 
         cProfile.run('np.fft.fft(signal_64)', 'restats_ns')

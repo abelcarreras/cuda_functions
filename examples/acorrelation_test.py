@@ -7,18 +7,18 @@ import cProfile, pstats
 
 # Check function
 if True:
+    # Double precision
     data = np.sin(np.arange(0, 50, 0.1)) + np.cos(np.arange(0, 50, 0.1)) * 1.0j
 
-  #  data = np.array(data, dtype='complex64')
+    # Single precision
+    # data = np.array(data, dtype='complex64')
+
     import matplotlib.pyplot as pl
 
     pl.plot(data, label='original data')
 
     cuda_res = cuda_acorrelate(data, mode="same") / data.size
-    # print res2
-
     numpy_res = np.correlate(data, data, mode='same') / data.size
-    # print res3
 
     pl.plot(cuda_res.real, '.', label='cuda real', marker='o')
     pl.plot(cuda_res.imag, '.', label='cuda imag', marker='o')
@@ -42,10 +42,11 @@ if True:
 
     tlen = []
     for l in range(100, 200000, 50000):
-        # signal = np.sin(np.arange(3000000)*0.1) + np.cos(np.arange(3000000)*0.1)*1j
+
+        # Double precision
         signal = np.random.rand(l) + np.random.rand(l)*1j
 
-
+        # Single precision
         signal_64 = np.array(signal, dtype='complex64')
 
         cProfile.run('np.correlate(signal, signal, mode="full")', 'restats_n')
