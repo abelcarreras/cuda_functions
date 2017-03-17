@@ -122,16 +122,15 @@ for prec, file in [
                    ('singleprecisioncomplex', 'gpu_fft_spc')
                   ]:
     fft_module_test.append(Extension('cuda_functions.bin.' + file,
-                         sources=['src/cuFFT.cu'],
-                         include_dirs=[include_dirs_numpy, CUDA['include']],
-                         library_dirs=[CUDA['lib64']],
-                         runtime_library_dirs=[CUDA['lib64']],
-                         libraries=['cudart', 'cufft', 'cublas'],
-                         extra_compile_args={'gcc': [],
+                           sources=['src/cuFFT.cu'],
+                           include_dirs=[include_dirs_numpy, CUDA['include']],
+                           library_dirs=[CUDA['lib64']],
+                           runtime_library_dirs=[CUDA['lib64']],
+                           libraries=['cudart', 'cufft', 'cublas'],
+                           extra_compile_args={'gcc': [],
                                             'nvcc': ['-arch=sm_20', '-D'+prec+'='+file,
                                                      '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
-                         ))
-
+                           ))
 
 # Autocorrelation functions
 acorr_module_test = []
