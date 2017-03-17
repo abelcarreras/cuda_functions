@@ -114,27 +114,43 @@ class custom_build_ext(build_ext):
         customize_compiler_for_nvcc(self.compiler)
         build_ext.build_extensions(self)
 
-# FFT function
-fft_module = Extension('cuda_functions.bin.gpu_fft',
-                       sources=['src/gpu_fft.cu'],
-                       include_dirs=[include_dirs_numpy, CUDA['include']],
-                       library_dirs=[CUDA['lib64']],
-                       libraries=['cudart', 'cufft', 'cublas'],
-                       runtime_library_dirs=[CUDA['lib64']],
-                       extra_compile_args={'gcc': [],
-                                           'nvcc': ['-arch=sm_20', '--ptxas-options=-v', '-c' , '--compiler-options', "'-fPIC'"]},
-                       )
 
-# Correlation fucntion
-acorr_module = Extension('cuda_functions.bin.gpu_correlate',
-                         sources=['src/gpu_correlate.cu'],
+# FFT/iFFT functions
+fft_module_test = []
+for prec, file in [
+                   ('doubleprecisioncomplex', 'gpu_fft_dpc'),
+                   ('singleprecisioncomplex', 'gpu_fft_spc')
+                  ]:
+    fft_module_test.append(Extension('cuda_functions.bin.' + file,
+                         sources=['src/cuFFT.cu'],
                          include_dirs=[include_dirs_numpy, CUDA['include']],
                          library_dirs=[CUDA['lib64']],
                          runtime_library_dirs=[CUDA['lib64']],
-                         libraries=['cudart','cublas'],
+                         libraries=['cudart', 'cufft', 'cublas'],
                          extra_compile_args={'gcc': [],
-                                    'nvcc': ['-arch=sm_20', '--ptxas-options=-v', '-c' , '--compiler-options', "'-fPIC'"]},
-                         )
+                                            'nvcc': ['-arch=sm_20', '-D'+prec+'='+file,
+                                                     '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
+                         ))
+
+
+# Autocorrelation functions
+acorr_module_test = []
+for prec, file in [
+                   ('doubleprecision',        'gpu_correlate_dp'),
+                   ('doubleprecisioncomplex', 'gpu_correlate_dpc'),
+                   ('singleprecision',        'gpu_correlate_sp'),
+                   ('singleprecisioncomplex', 'gpu_correlate_spc')
+                  ]:
+    acorr_module_test.append(Extension('cuda_functions.bin.' + file,
+                             sources=['src/autocorrelation.cu'],
+                             include_dirs=[include_dirs_numpy, CUDA['include']],
+                             library_dirs=[CUDA['lib64']],
+                             runtime_library_dirs=[CUDA['lib64']],
+                             libraries=['cudart', 'cublas'],
+                             extra_compile_args={'gcc': [],
+                                                 'nvcc': ['-arch=sm_20', '-D'+prec+'='+file,
+                                                 '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
+                             ))
 
 
 setup(name='cuda_functions',
@@ -143,7 +159,7 @@ setup(name='cuda_functions',
       url='https://github.com/abelcarreras/cuda_functions',
       author_email='abelcarreras83@gmail.com',
       version=get_version_number(),
-      ext_modules=[fft_module, acorr_module],
+      ext_modules=acorr_module_test + fft_module_test,
       packages=['cuda_functions',
                 'cuda_functions.bin'],
       license='MIT License',

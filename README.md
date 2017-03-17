@@ -13,11 +13,11 @@ using the power of GPU.
 Included functions (c)
 ---------------------------------------------------------
 
-1. Fast Fourier transform
+1. Fast Fourier transform (Complex only)
   - cuda_fft   (single/double precision Fourier transfom)
   - cuda_ifft  (single/double precision inverse Fourier transfom)
 
-2. Autocorrelation functions
+2. Autocorrelation functions (Real and complex)
   - cuda_acorrelate (single/double precision autocorrelation function)
 
 
@@ -27,11 +27,14 @@ Installation
 1. Run setup.py script to compile only (testing)
    <br>python setup.py build_ext  --inplace
 
-2. Run and check included python scripts as example
-
-3. Alternatively, if you want to install the module on your system use
+2. To install the module on your system use
    distutils setup.py as usual:
    <br>python setup.py install --user
+
+3. Now module is available on PyPI
+   <br>pip install cuda_functions
+ 
+4. Run and check included python scripts as example
 
 
 Contact info
