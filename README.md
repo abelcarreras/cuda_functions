@@ -10,7 +10,7 @@ These functions intend to mimic the behavior of numpy functions: fft and correla
 using the power of GPU.
 
 
-Included functions (c)
+Included functions
 ---------------------------------------------------------
 
 1. Fast Fourier transform (Complex only)
