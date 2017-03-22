@@ -23,6 +23,12 @@
  typedef float PREC_TYPE;
  #define cublasdotc(...) cublasSdot(__VA_ARGS__);
  #define NPY_CPREC NPY_FLOAT
+
+ float conjugate(float arg)
+{
+    return arg;
+}
+
 #endif
 
 #ifdef doubleprecision
@@ -30,6 +36,12 @@
  typedef double PREC_TYPE;
  #define cublasdotc(...) cublasDdot(__VA_ARGS__);
  #define NPY_CPREC NPY_DOUBLE
+
+ double conjugate(double arg)
+{
+    return arg;
+}
+
 #endif
 
 #ifdef singleprecisioncomplex
@@ -37,6 +49,12 @@
  typedef float2 PREC_TYPE;
  #define cublasdotc(...) cublasCdotc(__VA_ARGS__);
  #define NPY_CPREC NPY_CFLOAT
+
+float2 conjugate(float2 arg)
+{
+    return make_float2(arg.x, -arg.y);
+}
+
 #endif
 
 #ifdef doubleprecisioncomplex
@@ -44,11 +62,19 @@
  typedef double2 PREC_TYPE;
  #define cublasdotc(...) cublasZdotc(__VA_ARGS__);
  #define NPY_CPREC NPY_CDOUBLE
+
+double2 conjugate(double2 arg)
+{
+    return make_double2(arg.x, -arg.y);
+}
+
 #endif
 
 // Init function names
 #define MODULE_NAME STRINGIFY(MODULE_LABEL)
 #define INIT_FUNCTION M_CONC(init, MODULE_LABEL)
+
+// complex math functions
 
 
 static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywords);
@@ -101,7 +127,7 @@ static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywor
                          d_signal, 1,
                          &h_output);
             return_data[(signal_size*2-1)/2-i] = h_output;
-            if (((signal_size*2-1)/2+i) < signal_size*2-1) return_data[(signal_size*2-1)/2+i] = h_output;
+            if (((signal_size*2-1)/2+i) < signal_size*2-1) return_data[(signal_size*2-1)/2+i] = conjugate(h_output);
         }
     }
     else if  (strcmp(mode, "same") == 0) {
@@ -116,7 +142,7 @@ static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywor
                          d_signal, 1,
                          &h_output);
             return_data[signal_size/2-i] = h_output;
-            if ((signal_size/2+i) < signal_size) return_data[signal_size/2+i] = h_output;
+            if ((signal_size/2+i) < signal_size) return_data[signal_size/2+i] = conjugate(h_output);
         }
     }
     else if  (strcmp(mode, "valid") == 0) {
