@@ -11,6 +11,33 @@ class TestCuda(unittest.TestCase):
     def setUp(self):
         self.data = np.sin(np.arange(0, 8000, 0.1)) + 1j * np.random.rand(80000) * 0.1
 
+
+    def test_acorrelation_float32(self):
+
+        data = np.array(self.data, dtype='float32')
+
+        cuda_res = cuda_acorrelate(data, mode="same") / data.size
+     #   cuda_res = cuda_fft(np.array(cuda_res, dtype='complex64'))
+
+        numpy_res = np.correlate(data, data, mode='same') / data.size
+     #   numpy_res = np.fft.fft(numpy_res)
+
+        self.assertEqual(np.allclose(cuda_res, numpy_res, rtol=1, atol=1.e-8), True)
+
+
+    def test_ps_float64(self):
+
+        data = np.array(self.data, dtype='float64')
+
+        cuda_res = cuda_acorrelate(data, mode="same") / data.size
+        cuda_res = cuda_fft(np.array(cuda_res, dtype='complex128'))
+
+        numpy_res = np.correlate(data, data, mode='same') / data.size
+        numpy_res = np.fft.fft(numpy_res)
+
+        self.assertEqual(np.allclose(cuda_res, numpy_res, rtol=1, atol=1.e-16), True)
+
+
     def test_ps_complex64(self):
 
         data = np.array(self.data, dtype='complex64')
