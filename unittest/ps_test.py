@@ -17,11 +17,11 @@ class TestCuda(unittest.TestCase):
 
         data = np.array(self.data.real, dtype='float32')
 
-        cuda_res = cuda_acorrelate(data, mode="same") / data.size
-     #   cuda_res = cuda_fft(np.array(cuda_res, dtype='complex64'))
+        cuda_res = cuda_acorrelate(data, mode="valid") / data.size
+ #       cuda_res = cuda_fft(np.array(cuda_res, dtype='complex64'))
 
-        numpy_res = np.correlate(data, data, mode='same') / data.size
-     #   numpy_res = np.fft.fft(numpy_res)
+        numpy_res = np.correlate(data, data, mode='valid') / data.size
+ #       numpy_res = np.fft.fft(np.array(numpy_res, dtype='complex64'))
 
         self.assertEqual(np.allclose(cuda_res, numpy_res, rtol=1, atol=1.e-8), True)
 
@@ -30,10 +30,10 @@ class TestCuda(unittest.TestCase):
 
         data = np.array(self.data.real, dtype='float64')
 
-        cuda_res = cuda_acorrelate(data, mode='valid') / data.size
+        cuda_res = cuda_acorrelate(data, mode='full') / data.size
         cuda_res = cuda_fft(np.array(cuda_res, dtype='complex128'))
 
-        numpy_res = np.correlate(data, data, mode='valid') / data.size
+        numpy_res = np.correlate(data, data, mode='full') / data.size
         numpy_res = np.fft.fft(numpy_res)
 
         self.assertEqual(np.allclose(cuda_res, numpy_res, rtol=1, atol=1.e-16), True)
