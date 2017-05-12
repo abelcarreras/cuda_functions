@@ -13,7 +13,7 @@ using the power of GPU.
 Included functions
 ---------------------------------------------------------
 
-1. Fast Fourier transform 1D (Complex-to-complex only)
+1. Fast Fourier transform 1D (Complex-to-complex)
   - cuda_fft   (single/double precision Fourier transfom)
   - cuda_ifft  (single/double precision inverse Fourier transfom)
 
