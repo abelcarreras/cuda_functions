@@ -18,10 +18,9 @@ from distutils.command.build_ext import build_ext
 import numpy
 
 def get_version_number():
-    __version__ = None
     for l in open('cuda_functions/__init__.py', 'r').readlines():
         if not(l.find('__version__')):
-            exec(l)
+            exec(l, globals())
             return __version__
 
 def find_in_path(name, path):
@@ -157,7 +156,7 @@ setup(name='cuda_functions',
       description='cuda_functions module',
       url='https://github.com/abelcarreras/cuda_functions',
       author_email='abelcarreras83@gmail.com',
-      version=get_version_number(),
+      version="0.9.4",
       ext_modules=fft_module_test + acorr_module_test,
       packages=['cuda_functions',
                 'cuda_functions.bin'],
