@@ -153,8 +153,6 @@ static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywor
 
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CPREC, NPY_IN_ARRAY);
 
-    printf("test\n");
-
     if (h_signal_array == NULL ) {
          Py_XDECREF(h_signal_array);
          return NULL;
