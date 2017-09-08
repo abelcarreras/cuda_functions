@@ -24,17 +24,22 @@ Included functions
 Installation
 ---------------------------------------------------------
 
-1. Run setup.py script to compile only (testing)
+1. Requirements
+  - Python 2.7/3.4 or higher
+  - numpy
+  - cuda toolkit (http://docs.nvidia.com/cuda/)
+  
+2. Run setup.py script to compile only (testing)
    <br>python setup.py build_ext  --inplace
 
-2. To install the module on your system use
+3. To install the module on your system use
    distutils setup.py as usual:
    <br>python setup.py install --user
 
-3. Now module is available on PyPI
+4. Now module is available on PyPI
    <br>pip install cuda_functions
  
-4. Run and check included python scripts as example
+5. Run and check included python scripts as example
 
 
 Contact info
