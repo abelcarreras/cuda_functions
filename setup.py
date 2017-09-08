@@ -58,7 +58,7 @@ def locate_cuda():
     cudaconfig = {'home':home, 'nvcc':nvcc,
                   'include': pjoin(home, 'include'),
                   'lib64': pjoin(home, 'lib64')}
-    for k, v in cudaconfig.iteritems():
+    for k, v in cudaconfig.items():
         if not os.path.exists(v):
             raise EnvironmentError('The CUDA %s path could not be located in %s' % (k, v))
 
@@ -92,7 +92,7 @@ def customize_compiler_for_nvcc(self):
     #    cc_args.remove('-fno-strict-aliasing')
         if os.path.splitext(src)[1] == '.cu':
             # use the cuda for .cu files
-            print CUDA['nvcc']
+            print (CUDA['nvcc'])
             self.set_executable('compiler_so', CUDA['nvcc'])
             # use only a subset of the extra_postargs, which are 1-1 translated
             # from the extra_compile_args in the Extension class
@@ -158,7 +158,7 @@ setup(name='cuda_functions',
       url='https://github.com/abelcarreras/cuda_functions',
       author_email='abelcarreras83@gmail.com',
       version=get_version_number(),
-      ext_modules=acorr_module_test + fft_module_test,
+      ext_modules=fft_module_test + acorr_module_test,
       packages=['cuda_functions',
                 'cuda_functions.bin'],
       license='MIT License',

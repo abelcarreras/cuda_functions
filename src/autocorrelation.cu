@@ -73,14 +73,75 @@ double2 conjugate(double2 arg)
 // Init function names
 #define MODULE_NAME STRINGIFY(MODULE_LABEL)
 #define INIT_FUNCTION M_CONC(init, MODULE_LABEL)
+#define INIT_FUNCTION3 M_CONC(PyInit_, MODULE_LABEL)
 
 // complex math functions
-
-
 static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywords);
+
+
+
+
+//  Python Interface
+static char function_docstring[] =
+    "autocorrelation(signal)\nAutocorrelation function implemented in CUDA";
+
+static PyMethodDef extension_funcs[] = {
+    {"acorrelate", (PyCFunction)autocorrelation, METH_VARARGS|METH_KEYWORDS, function_docstring},
+    {NULL, NULL, 0, NULL}
+};
+
+
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef moduledef = {
+  PyModuleDef_HEAD_INIT,
+  "_gpu_correlate",
+  "This a module that contains a python interface to calculate correlation using cuBLAS",
+  -1,
+  extension_funcs,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+#endif
+
+
+static PyObject *
+moduleinit(void)
+{
+    PyObject *m;
+
+#if PY_MAJOR_VERSION >= 3
+    m = PyModule_Create(&moduledef);
+#else
+    m = Py_InitModule3(MODULE_NAME,
+        extension_funcs, "acorrelate module");
+#endif
+
+  return m;
+}
+
+#if PY_MAJOR_VERSION < 3
+    PyMODINIT_FUNC
+    INIT_FUNCTION(void)
+    {
+        import_array();
+        moduleinit();
+    }
+#else
+    PyMODINIT_FUNC
+    INIT_FUNCTION3(void)
+    {
+        import_array();
+        return moduleinit();
+    }
+
+#endif
+
 
 static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywords)
 {
+
     const char *mode = "valid";   // Default value of mode (to mimic numpy behavior)
 
     //  Interface with Python
@@ -89,7 +150,10 @@ static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywor
     static char *kwlist[] = {"input_data", "mode", NULL};
     if (!PyArg_ParseTupleAndKeywords(arg, keywords, "O|s", kwlist, &h_signal_obj, &mode))  return NULL;
 
+
     PyObject *h_signal_array = PyArray_FROM_OTF(h_signal_obj, NPY_CPREC, NPY_IN_ARRAY);
+
+    printf("test\n");
 
     if (h_signal_array == NULL ) {
          Py_XDECREF(h_signal_array);
@@ -170,21 +234,3 @@ static PyObject* autocorrelation(PyObject* self, PyObject *arg, PyObject *keywor
     return(PyArray_Return(return_object));
 }
 
-
-static char extension_docs[] =
-    "autocorrelation(signal)\nAutocorrelation function implemented in CUDA\n";
-
-static PyMethodDef extension_funcs[] =
-{
-    {"acorrelate", (PyCFunction) autocorrelation, METH_VARARGS|METH_KEYWORDS, extension_docs},
-    {NULL}
-};
-
-
-PyMODINIT_FUNC INIT_FUNCTION(void)
-{
-//  Importing numpy array types
-    import_array();
-    Py_InitModule3(MODULE_NAME, extension_funcs,
-                   "Autocorrelation functions (CUDA)");
-};

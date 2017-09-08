@@ -62,8 +62,6 @@ class TestCuda(unittest.TestCase):
         numpy_res = np.correlate(data, data, mode='full') / data.size
         numpy_res = np.fft.fft(numpy_res)
 
-        print np.array_equal(cuda_res, numpy_res)
-
         self.assertEqual(np.allclose(cuda_res, numpy_res, rtol=1, atol=1.e-16), True)
 
     def test_fft_complex64(self):

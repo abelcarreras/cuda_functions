@@ -58,11 +58,11 @@ if True:
         p_c = pstats.Stats('restats_c')
         p_cs = pstats.Stats('restats_cs')
 
-        print '{:8d} {:.6f} {:.6f} {:.6f} {:.6f}'.format(l,
+        print ('{:8d} {:.6f} {:.6f} {:.6f} {:.6f}'.format(l,
                                 p_n.total_tt / p_n.total_calls,
                                 p_ns.total_tt/ p_ns.total_calls,
                                 p_c.total_tt/ p_c.total_calls,
-                                p_cs.total_tt / p_cs.total_calls)
+                                p_cs.total_tt / p_cs.total_calls))
 
         time_n.append(p_n.total_tt/p_n.total_calls)
         time_ns.append(p_ns.total_tt/p_ns.total_calls)

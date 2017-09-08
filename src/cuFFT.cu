@@ -44,10 +44,86 @@
 // Init function names
 #define MODULE_NAME STRINGIFY(MODULE_LABEL)
 #define INIT_FUNCTION M_CONC(init, MODULE_LABEL)
+#define INIT_FUNCTION3 M_CONC(PyInit_, MODULE_LABEL)
 
 
 static PyObject* fft(PyObject* self, PyObject *arg, PyObject *keywords);
 static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords);
+
+
+
+///////////////////////////////////
+
+
+//  Python Interface
+
+
+static char function_docstring_fft[] =
+    "fft(signal)\nFast Fourier Transform implemented in CUDA\n using cuFFT\n  ";
+
+
+static char function_docstring_ifft[] =
+    "ifft(signal)\nInverse Fast Fourier Transform implemented in CUDA\n using cuFFT\n  ";
+
+
+static PyMethodDef extension_funcs[] =
+{
+    {"fft", (PyCFunction) fft, METH_VARARGS|METH_KEYWORDS, function_docstring_fft},
+    {"ifft", (PyCFunction) ifft, METH_VARARGS|METH_KEYWORDS, function_docstring_ifft},
+    {NULL, NULL, 0, NULL}
+};
+
+
+
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef moduledef = {
+  PyModuleDef_HEAD_INIT,
+  "_gpu_fft",
+  "This a module that contains a python interface to call cuFFT and cuiFFT",
+  -1,
+  extension_funcs,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+#endif
+
+
+static PyObject *
+moduleinit(void)
+{
+    PyObject *m;
+
+#if PY_MAJOR_VERSION >= 3
+    m = PyModule_Create(&moduledef);
+#else
+    m = Py_InitModule3(MODULE_NAME,
+        extension_funcs, "cuFFT module");
+#endif
+
+  return m;
+}
+
+#if PY_MAJOR_VERSION < 3
+    PyMODINIT_FUNC
+    INIT_FUNCTION(void)
+    {
+        import_array();
+        moduleinit();
+    }
+#else
+    PyMODINIT_FUNC
+    INIT_FUNCTION3(void)
+    {
+        import_array();
+        return moduleinit();
+    }
+
+#endif
+
+
+
 
 
 ///////////////////////////////////////////////
@@ -184,26 +260,6 @@ static PyObject* ifft(PyObject* self, PyObject *arg, PyObject *keywords)
 }
 
 
-static char extension_docs_fft[] =
-    "fft(signal)\nFast Fourier Transform implemented in CUDA\n using cuFFT\n  ";
 
 
-static char extension_docs_ifft[] =
-    "ifft(signal)\nInverse Fast Fourier Transform implemented in CUDA\n using cuFFT\n  ";
 
-
-static PyMethodDef extension_funcs[] =
-{
-    {"fft", (PyCFunction) fft, METH_VARARGS|METH_KEYWORDS, extension_docs_fft},
-    {"ifft", (PyCFunction) ifft, METH_VARARGS|METH_KEYWORDS, extension_docs_ifft},
-    {NULL}
-};
-
-
-PyMODINIT_FUNC INIT_FUNCTION(void)
-{
-//  Importing numpy array types
-    import_array();
-    Py_InitModule3(MODULE_NAME, extension_funcs,
-                   "Fast Fourier Tranform functions (CUDA)");
-};
