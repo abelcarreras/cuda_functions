@@ -6,7 +6,8 @@ os:
   - linux
 
 env:
-  - CUDA=8.0.61-1
+#  - CUDA=8.0.61-1
+  - CUDA=7.0-28
 
 python:
   - "2.7"
