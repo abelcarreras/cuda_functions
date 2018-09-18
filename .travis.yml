@@ -18,7 +18,7 @@ matrix:
       env: CUDA=8.0.61-1
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source script/travis/install_cuda.sh; fi
+  -  source script/travis/install_cuda.sh
 
 install:
     - pip install coverage
