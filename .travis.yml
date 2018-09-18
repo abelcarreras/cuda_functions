@@ -1,7 +1,10 @@
 language: python
 
+dist: trusty
+
 os:
   - linux
+
 env:
   - CUDA=8.0.61-1
 
@@ -14,8 +17,9 @@ branches:
     - master
     - development
 
-#before_install:
-#  -  source script/travis/install_cuda.sh
+before_install:
+  -  export CUDA_INSTALL_EXTRA_LIBS=0
+  -  source .travis/install-cuda-trusty.sh
 
 install:
     - pip install coverage
