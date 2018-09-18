@@ -1,0 +1,35 @@
+language: python
+
+os:
+  - linux
+
+python:
+  - "2.7"
+  - "3.4"
+
+branches:
+  only:
+    - master
+    - development
+
+matrix:
+  include:
+    - os: linux
+      env: CUDA=8.0.61-1
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source script/travis/install_cuda.sh; fi
+
+install:
+    - pip install coverage
+    - pip install python-coveralls
+    - pip install -r requirements.txt
+    - pip install -e .
+
+script:
+    - cd unittest
+    - coverage run --source=../cuda_functions -m unittest discover . "*_test.py"
+
+after_success:
+    - coveralls
+    - cd ../..
