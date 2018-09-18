@@ -2,6 +2,8 @@ language: python
 
 os:
   - linux
+env:
+  - CUDA=8.0.61-1
 
 python:
   - "2.7"
@@ -12,13 +14,8 @@ branches:
     - master
     - development
 
-matrix:
-  include:
-    - os: linux
-      env: CUDA=8.0.61-1
-
-before_install:
-  -  source script/travis/install_cuda.sh
+#before_install:
+#  -  source script/travis/install_cuda.sh
 
 install:
     - pip install coverage
