@@ -127,8 +127,10 @@ for prec, file in [
                            runtime_library_dirs=[CUDA['lib64']],
                            libraries=['cudart', 'cufft', 'cublas'],
                            extra_compile_args={'gcc': [],
-                                            'nvcc': ['-arch=sm_20', '-D'+prec+'='+file,
-                                                     '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
+                                              'nvcc': [
+                                                       # '-arch=sm_60',
+                                                       '-D'+prec+'='+file,
+                                                       '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
                            ))
 
 # Autocorrelation functions
@@ -146,8 +148,10 @@ for prec, file in [
                              runtime_library_dirs=[CUDA['lib64']],
                              libraries=['cudart', 'cublas'],
                              extra_compile_args={'gcc': [],
-                                                 'nvcc': ['-arch=sm_20', '-D'+prec+'='+file,
-                                                 '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
+                                                 'nvcc': [
+                                                           # '-arch=sm_60',
+                                                           '-D'+prec+'='+file,
+                                                           '--ptxas-options=-v', '-c', '--compiler-options', "'-fPIC'"]},
                              ))
 
 
